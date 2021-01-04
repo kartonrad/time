@@ -1,14 +1,22 @@
+import style from "../style/Header.module.sass";
+import {
+    Link
+} from "react-router-dom";
+import { EyePlaceholder } from "./EyeOfJudgement";
+
 export default function Header(props) {
+    function noop() {}
+
     return (
     <nav className={style.header}>
         <div className={style.headerStart}>
-            <Link href="/"><EyePlaceholder size={40} id="default" onClick={noop}></EyePlaceholder></Link>
+            <Link to="/"><EyePlaceholder size={40} id="default" onClick={noop}></EyePlaceholder></Link>
             <div className={style.title}>
                 {props.title}
             </div>
         </div>
         <ul className={style.headerTray}>
-            {itemObj}
+            {props.children}
         </ul>
     </nav>);
 }

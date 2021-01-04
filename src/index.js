@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.sass';
 import App from './App';
+import { EyeProvider } from "./components/EyeOfJudgement";
 
 import {
   BrowserRouter as Router,
@@ -9,7 +10,11 @@ import {
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router><App /></Router>
+    <Router>
+      <EyeProvider>
+        <App />
+      </EyeProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

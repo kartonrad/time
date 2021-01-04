@@ -1,4 +1,6 @@
-import s from '.style/App.module.css';
+import s from './style/App.module.css';
+import Header from "./components/Header.js";
+
 import {
   Switch,
   Route,
@@ -8,7 +10,7 @@ import {
 function App() {
   return (
     <>
-      <Header></Header>
+      <Header title="LIFE CONTROL"></Header>
       <Switch>
         <Route path="/">
         	  
