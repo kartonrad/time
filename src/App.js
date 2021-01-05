@@ -8,6 +8,7 @@ import {
   Link
 } from "react-router-dom";
 import Card from './components/Card';
+import { Clock } from './components/Clock';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Switch>
           <Route path="/">
               <TimeProgressCards/>
+              <Clock/>
           </Route>
         </Switch>
       </div>
