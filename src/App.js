@@ -9,16 +9,18 @@ import {
 } from "react-router-dom";
 import Card from './components/Card';
 import { Clock } from './components/Clock';
+import { DiaryForm } from './components/Diary';
 
 function App() {
   return (
     <>
-      <Header title="LIFE CONTROL"></Header>
+      <Header title="TIME"></Header>
       <div className={s.container}> 
         <Switch>
           <Route path="/">
               <TimeProgressCards/>
               <Clock/>
+              <DiaryForm/>
           </Route>
         </Switch>
       </div>

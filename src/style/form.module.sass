@@ -1,0 +1,267 @@
+.form 
+    display: flex
+    flex-flow: column
+    width: 100%
+    text-align: left
+
+    button, input, textarea, select
+        @extend .baseButton
+
+    label
+        color: #b3b3b3
+        &:focus-within
+            color: #e2e2e2
+
+    select
+        appearance: none
+        -webkit-appearance: none
+        background: url("/res/svg/dropdownarrow.svg") no-repeat right #262626
+        background-size: 20px
+        background-position: calc(100% - 10px)
+        padding-right: 20px
+
+    textarea 
+        resize: vertical
+        rows: 10
+        scrollbar-color: #535353 transparent
+        scrollbar-width: thin
+        min-height:8em
+
+    textarea, input[type="date"], input[type="time"]
+        font-family: inherit
+    
+    input[type="checkbox"]
+        -webkit-appearance: none
+        border-radius: 20px
+        height: 20px
+        width: 20px
+
+        &[required]
+            background-color: #c71717
+        &:checked 
+            background-color: rgb(50, 214, 0)
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1)
+        
+        &:active, &:checked:active 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1)
+
+    input[type="submit"], button
+        width: 100%
+
+        //background
+        //box-shadow: inset 0 0 black
+        //transition: box-shadow 500ms
+
+        &:hover
+            
+            //box-shadow: inset 0 0 1em yellow 
+
+    input[data-wrong="true"]
+        border: 2px solid #ff00008c
+
+.baseButton
+    &:disabled
+        cursor: not-allowed
+        color: #979797
+        background-color: transparent
+
+    box-sizing: border-box
+    max-width: 100%
+    width: 100%
+    border: 2px solid #535353
+    border-radius: 10px
+    
+    padding: 5px
+
+    background-color: #262626
+    color: white
+    
+    font-size: inherit  
+    outline: none
+
+    &:focus     
+        border-color: #acacac   
+
+.accountFormWrap
+    display: flex
+    align-items: center
+    align-content: center
+    text-align: center
+    flex-flow: column nowrap
+    max-height: 100%
+    scrollbar-color: #535353 transparent
+
+    & p 
+        margin-top: 0
+
+    ul 
+        text-align: left
+
+    sub, sup
+        color: #888
+
+.usernameHighlight
+    background-color: #cacaca
+    padding: .25em .5em 
+    color: #2b2828
+    border-radius: 1em
+
+.removeButton 
+    background-color: #ff3434
+    color: white
+    border: none
+    border-radius: 2em
+    font-weight: bold
+    font-size: 1.5em
+    padding: .25em 1em
+    margin-top: 1.5em
+    font-family: inherit
+    transition: all 400ms
+    max-width:18.75em
+    max-height: 3.125em
+    overflow: hidden
+    white-space: break-word
+
+    svg
+        color: white
+
+    &:hover
+        box-shadow: inset 0 .125em .5em .25em #00000067
+
+    &.clicked, &:active
+        color: transparent
+        transform: translateY(-.25em)
+        max-width: 2em
+        max-height: 2em
+        padding: 12px 5px
+        box-shadow: inset 0 .125em .5em .25em #00000067
+
+.accountFormsAlign
+    display: flex
+    min-width: 60%
+    justify-content: space-between 
+
+    & > div
+        flex-shrink: 1
+
+
+.registerForm
+    @extend .form
+    max-width: 300px
+
+.tabWrapper
+    width: max-content
+    margin: 0 auto
+
+.tabBar
+    display: flex
+    width: 300px
+
+.tab 
+    flex: 1 1 0
+    padding: 1em
+    padding-bottom: .25em
+    padding-top: .25em
+    margin-bottom: .5em
+    font-size: 1.5em
+    color: #788080
+    transition: all 200ms
+    border-bottom: .25em transparent solid
+
+    &[aria-selected="true"]
+        color: #cecece
+        border-bottom: .25em #cecece solid
+
+.submitButton 
+    /*display: flex*/
+    /*justify-content: space-between*/
+
+    & span
+        background-color: #ff00008c
+        padding: 1em
+        border-radius: 1em
+        color: white
+        display: block
+
+        sub, sup 
+            color: #cecece
+
+
+    & button    
+        flex-grow: 0
+        flex-shrink: 0
+        height: 2.4375em
+
+        padding: .5em 1.5em 
+        overflow: hidden
+        transition: all 200ms ease-out
+        font-weight: bold
+        width: max-content
+        float: right
+        position: relative
+        background-color: transparent
+        margin: 2px
+
+        &:hover, &:active
+            &::before
+                top: -200%
+                left: -200%
+            color: white
+            border-color: #00000000
+
+        &:active
+            
+
+        &:disabled
+            height: 2.6875em
+            cursor: wait
+            color: lime
+            border: 4px double lime
+            margin: 0
+            animation: jumping 300ms ease 1
+            &::before
+                transition: none
+                animation: rotating 500ms infinite linear
+                top: -105%
+                left: -106%
+            
+        &::before
+            transition: 200ms ease-out
+            transition-property: top, left, border
+            content: ""
+            position: absolute
+            width: 315%
+            height: 315%
+            top: 0%
+            left: 0%
+            background: linear-gradient(135deg, rgba(38,38,38,1), rgba(38,38,38,1), #01db0c, #02420d)
+            background-position: 0% 0%
+            z-index: -1
+
+.destructiveButton 
+    @extend .submitButton      
+    & button
+        border-color: #eb0808
+        z-index: 2
+        &::before
+            z-index: -1
+            background-image: linear-gradient(135deg, rgba(38,38,38,1), rgba(38,38,38,1),#830da3 , #eb0808)
+        &:disabled
+            color: #d60000
+            border-color: #d60000
+
+
+@keyframes rotating
+    from
+        transform: rotate(0deg)
+
+    to
+        transform: rotate(365deg)
+
+@keyframes jumping
+    0%
+        transform: translateY(0em)
+    50%
+        transform: translateY(-1em)
+    100%
+        transform: translateY(0em)

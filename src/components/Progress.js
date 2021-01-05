@@ -1,7 +1,9 @@
 import s from "../style/progress.module.sass";
-import {endOfDecade, endOfHour, endOfWeek,endOfDay, endOfMinute, endOfMonth, endOfYear, startOfMonth, startOfYear, startOfDay, startOfDecade, startOfWeek, startOfHour, startOfMinute} from "date-fns";
+import {endOfDecade, endOfHour, endOfWeek,endOfDay, endOfMinute, endOfMonth, endOfYear, startOfMonth, startOfYear, startOfDay, startOfDecade, startOfWeek, startOfHour, startOfMinute, addYears} from "date-fns";
 
 import {useRefresh} from "../helpers/refresh";
+
+const birthday = new Date("May 4, 2003 00:00:00");
 
 export function ProgressBar(props) {
     return (
@@ -16,6 +18,9 @@ export function ProgressBar(props) {
 export function TimeProgressCards(props) {
     useRefresh();
     var now = Date.now();
+
+    var lifeend = addYears(birthday, 81.57);
+    var lifeProgress = 100-(lifeend-now) / (lifeend-birthday) * 100;
 
     var nextDec = endOfDecade(now);
     var thisDec = startOfDecade(now);
@@ -48,7 +53,7 @@ export function TimeProgressCards(props) {
     return (
         <div className={s.TimeProgressCards}>
             <table>
-                <tr><td>Life</td>    <td><ProgressBar/></td>                    <td>{Math.floor(yearProgress)}%</td></tr>
+                <tr><td>Life</td>    <td><ProgressBar p={lifeProgress}/></td>   <td>{Math.floor(lifeProgress)}%</td></tr>
                 <tr><td>Decade</td>  <td><ProgressBar p={decProgress}/></td>    <td>{Math.floor(decProgress)}%</td></tr>
                 <tr><td>Year</td>    <td><ProgressBar p={yearProgress} /></td>  <td>{Math.floor(yearProgress)}%</td></tr>
                 <tr><td>Month</td>   <td><ProgressBar p={monthProgress}/></td>  <td>{Math.floor(monthProgress)}%</td></tr>
