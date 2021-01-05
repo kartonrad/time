@@ -62,7 +62,7 @@ export function DiaryForm() {
                 name="text"
                 value={text}
                 onChange={(e)=>{setText(e.target.value)}}></textarea>
-            <input type="submit"></input>
+            <div className={s.submitButton}><button>Submit</button></div>
         </form>
     </div>);
 }
