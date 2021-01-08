@@ -1,6 +1,14 @@
 @use "./card.module"
 @use "./form.module"
 
+.diaryGrid
+    @extend .card
+    flex-direction: column
+
+    th, td
+        width: 1.5em
+        height: 1.5em
+
 .diaryForm
     @extend .card
     flex-direction: column
@@ -12,6 +20,59 @@
         .submitButton
             align-self: flex-end
             width: max-content
+
+.modal
+    min-width: 300px
+
+    div
+        width: 100%
+        display: flex
+        justify-content: space-between
+
+    span
+        filter: brightness(50%)
+        font-size: 2em
+        position: relative
+        top: -0.5em
+        	
+        &:last-child
+            //padding-right:  1.4em
+
+    p 
+        white-space: pre-wrap
+    h1 
+        margin-top: -10px
+        padding: .5em
+        //box-shadow: 0px 0px 24px 4px #353535
+        background-color: #353535
+        border-radius: 1em
+
+.modalNav
+    width: 100%
+    display: flex
+    justify-content: space-between
+    margin-top: 2em
+
+    span
+        margin-bottom: -1.5em
+
+    b
+        margin-bottom: -1.5em
+        color: #808080
+        
+        //border: 3px solid white
+        //width: 2em
+        //height: 2em
+        //border-radius: .5em
+
+
+.title
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100px
+    z-index: -1
 
 .pixelrow
     display: flex
@@ -26,12 +87,15 @@
     display: table
     margin: .5em
     
+    &[data-active="false"]
+
+
     span
         margin: auto 0
         display: table-cell
         vertical-align: middle
         font-size: 20px
         font-weight: bold
-        width: 100%
+        width: 3em
         height: 100%
         filter: brightness(50%)

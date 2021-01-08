@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Card from './components/Card';
 import { Clock } from './components/Clock';
-import { DiaryForm } from './components/Diary';
+import { DiaryForm, Diary } from './components/Diary';
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
               <TimeProgressCards/>
               <Clock/>
               <DiaryForm/>
+              <Diary/>
           </Route>
         </Switch>
       </div>
