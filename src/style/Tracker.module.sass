@@ -1,0 +1,41 @@
+@use "card.module"
+    
+.circleSlice
+    top: 0
+    left: 0
+    position: absolute
+
+.trackingData
+    position: relative
+
+.activities
+    @extend .card
+    flex-direction: column
+
+    .current
+        span 
+            color: #a3a3a3
+            font-size: .5em
+
+        div
+            display: table-cell
+            vertical-align: middle
+
+        display: table
+        text-align: center
+        border: 25px solid #ffffff62
+        border-radius: 2000px
+        width: 200px
+        height: 200px
+        font-size: 1.5em
+        vertical-align: middle
+        margin-bottom: 0.5em
+
+.colorIndicator
+    z-index: 1
+    position: absolute
+    right: 0
+    width: 1.5em
+    height: 1.5em
+    border-radius: 3em
+    top: 0

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-export function useRefresh() {
+export function useRefresh(ms=1000) {
     const [nowe, setNow] = useState(Date.now());
     useEffect(() => {
         var lol = setInterval(() => {
             setNow(Date.now());
-        }, 1000);
+        }, ms);
         return () => clearInterval(lol);
     }, []);
 

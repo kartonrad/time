@@ -1,6 +1,7 @@
 import s from './style/App.module.sass';
 import Header from "./components/Header.js";
 import { TimeProgressCards, ProgressBar} from "./components/Progress";
+import { CircleSlice, TrackingActivities, TrackingData } from "./components/Tracker";
 
 import {
   Switch,
@@ -22,6 +23,8 @@ function App() {
               <Clock/>
               <DiaryForm/>
               <Diary/>
+              <TrackingActivities/>
+              <TrackingData/>
           </Route>
         </Switch>
       </div>
