@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { apiUrl } from "../helpers/constants";
 import { useServerState } from "../helpers/requestedState";
 import s from "../style/Tracker.module.sass";
+import formS from "../style/form.module.sass";
 import {filterObject} from "../helpers/utils"
 import { Drawer } from "./Drawer";
 import { useRefresh } from "../helpers/refresh";
@@ -49,14 +50,39 @@ export function TrackingData(props) {
 
 export function EditActivity(props) {
     const [color, setColor] = useState(props.act.color); 
+    const [name, setName] = useState(props.act.name);
+    const [verb, setVerb] = useState(props.act.verb);
+
 
     function change(color) {
         setColor(color)
     }
 
-    return (
-        <>
-            <SketchPicker color={color} onChange={change}/>
+    function submit(evt) {
+        evt.preventDefault();
+    }
+
+    return (<>
+        <form className={formS.form} onSubmit={submit}>
+            <div className={s.current} style={{borderColor: color?color.hex:"black"  }}>
+                <div className={s.formsubstyling}>
+                    <span>Editing:<br/></span>
+                    <input 
+                        type="text" 
+                        value={name}
+                        onChange={(e)=>setName(e.target.value)}
+                    /><br/>
+                    <span>
+                    <input 
+                        type="text" 
+                        value={verb}
+                        onChange={(e)=>setVerb(e.target.value)}
+                    /><br/></span>
+                </div>
+            </div>
+            <div className={formS.submitButton}><button>Edit</button></div>
+        </form>
+            <SketchPicker color={color} onChange={change} style={{sliders: {backgroundColor: "white"} }}/>
         </>
     );
 }
@@ -82,7 +108,7 @@ export function TrackingActivities(props) {
     }
 
     function editAct(activity) {
-        setEditingAct(activity);
+        setEditingAct(acts[activity]);
         modalRef.current.toggleModal();
     }
 
