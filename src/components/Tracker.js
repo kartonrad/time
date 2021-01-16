@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { apiUrl } from "../helpers/constants";
 import { useServerState } from "../helpers/requestedState";
 import s from "../style/Tracker.module.sass";
@@ -8,14 +8,38 @@ import { Drawer } from "./Drawer";
 import { useRefresh } from "../helpers/refresh";
 import {Modal} from "./Modal";
 import { SketchPicker } from 'react-color';
+import { MenuData } from "./ContextMenu";
+
+export function TrackingDashboard(props) {
+    const [idx, setIdx] = useState(1);
+    var apiList = ["day", "7days", "30days", "year", "all-time"];
+
+
+    return <div className={s.activities}>
+        <div className={s.nav}>
+            <span
+                onClick={()=>setIdx(prev=>mod(prev-1, apiList.length))}
+            >&lt;</span>
+            <span>{apiList[idx]}</span>
+            <span
+                onClick={()=>setIdx(prev=>mod(prev+1, apiList.length))}
+            >&gt;</span>
+        </div>
+        <TrackingData endpoint={apiList[idx]}></TrackingData>
+    </div>;
+}
+
+function mod(n, m) {
+    return ((n % m) + m) % m;
+  }
 
 export function TrackingData(props) {
-    const [data, setData] = useServerState(`/timestats/30days/`);
+    const [data, setData] = useServerState(`/timestats/${props.endpoint}/`);
     const [acts, setActs] = useServerState(`/timestats/activity`)
 
     var circleArray = []
     
-    
+    const ctxMenu = useContext(MenuData);
 
     if(data&&acts) {
         var totalHours = data.totalHours - (data.hours.nothing||0);
@@ -34,6 +58,10 @@ export function TrackingData(props) {
                     rotation={prevRot}
                     portion={perc}
                     color={acts[action].color}
+                    onClick={(evt) => {
+                        ctxMenu.openMenu(evt.clientX, evt.clientY, <>{data.hours[action]} spent {acts[action].verb}</>)
+                    }}
+                    actualRadius = {80}
                 ></CircleSlice>
             );
 
@@ -48,29 +76,77 @@ export function TrackingData(props) {
     );
 }
 
+export function CircleSlice(props) {
+    var radius = props.actualRadius/2 || 30;
+    var circumference = 2 * radius * Math.PI;
+    var rot = props.rotation || 0;
+    var perc = props.portion || 0.1;
+    var col = props.color || "orange";
+
+    return (
+        <div className={s.circleSlice}><svg 
+            width="120"
+            height="120"
+            style={{transform: `rotate(${rot}deg)`}}
+        >
+            <circle
+                stroke={col}
+                strokeWidth={radius}
+                fill="transparent"
+                r={radius}
+                strokeDasharray={[circumference, circumference]}
+                strokeDashoffset={circumference - (circumference*perc)}
+                cx="60"
+                cy="60"
+                onClick={props.onClick}
+            />
+        </svg></div>
+    );
+}
+
+
 export function EditActivity(props) {
     const [color, setColor] = useState({hex: props.act.color}); 
     const [name, setName] = useState(props.act.name);
     const [verb, setVerb] = useState(props.act.verb);
+    const [id, setId] = useState(props.act.id);
+    const [parent, setParent] = useState(props.act.parent);
 
 
     function change(color) {
         setColor(color)
     }
 
-    function submit(evt) {
+    async function submit(evt) {
         evt.preventDefault();
-        fetch(apiUrl+`/timestats/activity/${props.act.id}`, {
-            body: JSON.stringify({
-                color: color.hex, name, verb
-            }),
-            method: "POST",
-            headers: {'Content-Type': 'application/json'}
-        })
+        var p=parent;
+        if(parent==="undefined") p=null;
+        if(id !== props.act.id && props.actKeys.includes(id)) return console.log("eeeeee");
+
+        
+        try {
+            var res = await fetch(apiUrl+`/timestats/activity/${props.act.new ? id : props.act.id }`, {
+                body: JSON.stringify({
+                    color: color.hex, 
+                    name, 
+                    verb, 
+                    parent: p
+                }),
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}
+            });
+
+            if(res.ok) {
+                var json = await res.json();
+                props.afterEdited(json);
+            }
+        } catch (error) {
+            alert("no");
+        }
     }
 
     return (<>
-        <form className={formS.form} onSubmit={submit}>
+        <form className={formS.form} onSubmit={submit} style={{width: "250px"}}>
             <div className={s.current} style={{borderColor: color?color.hex:"black"  }}>
                 <div className={s.formsubstyling}>
                     <span>Editing:<br/></span>
@@ -87,6 +163,18 @@ export function EditActivity(props) {
                     /><br/></span>
                 </div>
             </div>
+            {props.act.new && <input 
+                type="text" 
+                value={id}
+                onChange={(e)=>setId(e.target.value)}
+            />}
+            <select onChange={evt => setParent(evt.target.value)} value={parent}>
+                <option value="undefined">&lt;unparented&gt;</option>
+                {props.actKeys.map(key => 
+                    <option value={key}>{key}</option>    
+                )}
+            </select>
+
             <div className={formS.submitButton}><button>Edit</button></div>
         </form>
             <SketchPicker color={color} onChange={change} style={{sliders: {backgroundColor: "white"} }}/>
@@ -115,8 +203,14 @@ export function TrackingActivities(props) {
     }
 
     function editAct(activity) {
-        var lol = acts[activity];
-        lol.id  = activity
+        var lol;
+        if (activity === undefined) {
+            lol = {name: "New Activity", color: "#000000", verb: "acting", id: "new", new: true};
+        } else {
+            lol = acts[activity]; 
+            lol.id  = activity;
+        }
+       
         setEditingAct(lol);
         modalRef.current.toggleModal();
     }
@@ -147,10 +241,21 @@ export function TrackingActivities(props) {
                 </div>
             </div>
             <span>Activities:</span>
+
+            <Drawer content={<>
+                    <span onClick={()=>editAct()}>+ New Activity</span>
+            </>}></Drawer>
             {drawers}
 
             <Modal ref={modalRef}>
-                <EditActivity act={editingAct}/>
+                <EditActivity act={editingAct} actKeys={Object.keys(acts||{})} 
+                afterEdited={(json) => {
+                    setActs(prev1 => {
+                        var prev = {...prev1}
+                        prev[editingAct.id] = json;
+                        return prev;
+                    })
+                }}/>
             </Modal>
         </div>
     );
@@ -158,7 +263,7 @@ export function TrackingActivities(props) {
 
 function constructActivityDrawers(acts, clicker, editer, parent) {
     var drawers=[];
-    var rootActs = filterObject(acts, act=> act.parent===parent);
+    var rootActs = filterObject(acts, act=> (act.parent===parent) ||(parent===undefined && act.parent===null));
     for(let key in rootActs) {
         var childDrawers = constructActivityDrawers(acts, clicker, editer, key);
 
@@ -175,30 +280,4 @@ function constructActivityDrawers(acts, clicker, editer, parent) {
     return drawers;
 }
 
-export function CircleSlice(props) {
-    var radius = props.actualRadius/2 || 30;
-    var circumference = 2 * radius * Math.PI;
-    var rot = props.rotation || 0;
-    var perc = props.portion || 0.1;
-    var col = props.color || "orange";
-
-    return (
-        <div className={s.circleSlice}><svg 
-            width="120"
-            height="120"
-            style={{transform: `rotate(${rot}deg)`}}
-        >
-            <circle
-                stroke={col}
-                strokeWidth={radius}
-                fill="transparent"
-                r={radius}
-                strokeDasharray={[circumference, circumference]}
-                strokeDashoffset={circumference - (circumference*perc)}
-                cx="60"
-                cy="60"
-            />
-        </svg></div>
-    );
-}
 

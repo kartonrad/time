@@ -4,7 +4,7 @@ import arrow from "../res/svg/dropdownarrow.svg";
  
 export function Drawer(props) {
     const [open, setOpen] = useState(false);
-    const hasChildren = props.children.length>0
+    const hasChildren = Array.isArray(props.children) && props.children.length>0 
     
     var rotDeg = open?"rotate(0deg)":"rotate(-90deg)";
     console.log(rotDeg);

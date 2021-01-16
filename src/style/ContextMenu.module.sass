@@ -1,0 +1,20 @@
+@use "./card.module"
+    
+.menuMover
+    position: absolute
+    display: none
+    z-index: 1
+
+    .contextMenu
+        top: 0
+        left: 0
+        width: 200px
+
+        .item
+            margin: 0
+
+            .itemText
+                padding: .5em
+
+.contextMenu
+    @extend .card
