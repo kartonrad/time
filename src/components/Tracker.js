@@ -49,7 +49,7 @@ export function TrackingData(props) {
 }
 
 export function EditActivity(props) {
-    const [color, setColor] = useState(props.act.color); 
+    const [color, setColor] = useState({hex: props.act.color}); 
     const [name, setName] = useState(props.act.name);
     const [verb, setVerb] = useState(props.act.verb);
 
@@ -60,6 +60,13 @@ export function EditActivity(props) {
 
     function submit(evt) {
         evt.preventDefault();
+        fetch(apiUrl+`/timestats/activity/${props.act.id}`, {
+            body: JSON.stringify({
+                color: color.hex, name, verb
+            }),
+            method: "POST",
+            headers: {'Content-Type': 'application/json'}
+        })
     }
 
     return (<>
@@ -108,7 +115,9 @@ export function TrackingActivities(props) {
     }
 
     function editAct(activity) {
-        setEditingAct(acts[activity]);
+        var lol = acts[activity];
+        lol.id  = activity
+        setEditingAct(lol);
         modalRef.current.toggleModal();
     }
 
