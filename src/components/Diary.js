@@ -30,7 +30,7 @@ export function DiaryForm() {
             }
 
         } catch(err) {
-            alert(err);
+            console.log(err);
         }
     }, []);
 
@@ -124,7 +124,7 @@ export function Diary(props) {
             }
 
         } catch(err) {
-            alert(err);
+            console.log(err);
         }
     }, []);
 
@@ -247,7 +247,7 @@ function usePixels() {
                 alert("hurensohn");
             }
         } catch(err) {
-            alert("err");
+            console.log("err");
         }       
     },[]);
 

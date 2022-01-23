@@ -59,7 +59,7 @@ export function TrackingData(props) {
                     portion={perc}
                     color={acts[action].color}
                     onClick={(evt) => {
-                        ctxMenu.openMenu(evt.clientX, evt.clientY, <>{data.hours[action]} spent {acts[action].verb}</>)
+                        ctxMenu.openMenu(evt.pageX, evt.pageY, <>{data.hours[action].toFixed(2)} h spent {acts[action].verb}</>)
                     }}
                     actualRadius = {80}
                 ></CircleSlice>
@@ -217,7 +217,8 @@ export function TrackingActivities(props) {
 
     var currentHours=0;
     var curAct = {};
-    var color = "black"
+    var color = "black";
+    console.log(acts);
     if(cur && acts) {
         curAct = acts[cur.act];
         var diff =  Date.now()-cur.t;
@@ -252,7 +253,7 @@ export function TrackingActivities(props) {
                 afterEdited={(json) => {
                     setActs(prev1 => {
                         var prev = {...prev1}
-                        prev[editingAct.id] = json;
+                        prev[json.id] = json;
                         return prev;
                     })
                 }}/>

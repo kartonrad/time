@@ -10,7 +10,7 @@ export default function Header(props) {
     return (
     <nav className={style.header}>
         <div className={style.headerStart}>
-            <Link to="/"><EyePlaceholder size={40} id="default" onClick={noop}></EyePlaceholder></Link>
+            <a href="https://kartonrad.de"><EyePlaceholder size={40} id="default" onClick={noop}></EyePlaceholder></a>
             <div className={style.title}>
                 {props.title}
             </div>
