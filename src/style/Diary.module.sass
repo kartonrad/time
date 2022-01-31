@@ -5,9 +5,25 @@
     @extend .card
     flex-direction: column
 
+    h1 > span
+        font-weight: normal
+        color: #a3a3a3
+
     th, td
         width: 1.5em
         height: 1.5em
+
+    & > div
+        display: flex
+        flex-direction: row
+        justify-content: space-between
+        color: #a3a3a3
+        width: 100%
+        margin-bottom: .5em
+
+        & span[data-bingus=true]
+            color: white
+            fontWeight: bold
 
 .diaryForm
     @extend .card

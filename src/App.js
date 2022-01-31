@@ -23,10 +23,10 @@ function App() {
           <Route path="/">
               <TimeProgressCards/>
               <Clock/>
-              <TrackingActivities/>
-              <TrackingDashboard/>
               <DiaryForm/>
               <Diary/>
+              <TrackingActivities/>
+              <TrackingDashboard/>
           </Route>
         </Switch>
       </div>

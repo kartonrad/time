@@ -108,11 +108,13 @@ export function Diary(props) {
     const [pixelGrid, setPixelGrid] = useState({});
     const modalRef = useRef({});
     const [sel, setSel] = useState([1, 1]);
+    const [reqYear, setYear] = useState(new Date(Date.now()).getFullYear());
+    const [size, setSize] = useState(8);
 
     //fetching pixels and pixelgrid
     useEffect(async () => {
         try {
-            var year = new Date(Date.now()).getFullYear()
+            var year = reqYear;
             var res = await fetch(apiUrl+`/diary/${year}`);
             if(res.ok) {
                 var json = await res.json()
@@ -126,7 +128,7 @@ export function Diary(props) {
         } catch(err) {
             console.log(err);
         }
-    }, []);
+    }, [reqYear]);
 
     var rows = [];
 
@@ -190,8 +192,19 @@ export function Diary(props) {
 
     return (
         <div className={s.diaryGrid} onKeyDown={keyDown} tabindex="0" >
-            <h1>Year in Pixels</h1>
-            <table>
+            <h1>Year in Pixels <span>- {reqYear}</span></h1>
+            <div>
+                <span onClick={() => setYear((y)=>y-1)}>&lt;</span> 
+                
+                <span>
+                    <span onClick={()=>setSize(0)} data-bingus={size===0}>small -</span>
+                    <span onClick={()=>setSize(8)} data-bingus={size===8}> middle -</span>
+                    <span onClick={()=>setSize(16)} data-bingus={size===16}> big</span>
+                </span>
+
+                <span onClick={() => setYear((y)=>y+1)}>&gt;</span> 
+            </div>
+            <table style={{fontSize: size}}>
                 <tr key={0}>{["", "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"].map((v,i)=><th scope="col" key={i}>{v}</th>)}</tr>
                 {rows}
             </table>
