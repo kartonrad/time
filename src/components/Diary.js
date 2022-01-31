@@ -193,7 +193,7 @@ export function Diary(props) {
     return (
         <div className={s.diaryGrid} onKeyDown={keyDown} tabindex="0" >
             <h1>Year in Pixels <span>- {reqYear}</span></h1>
-            <div>
+            <div class={s.diaryControls}>
                 <span onClick={() => setYear((y)=>y-1)}>&lt;</span> 
                 
                 <span>
