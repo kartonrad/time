@@ -11,7 +11,7 @@ import { SketchPicker } from 'react-color';
 import { MenuData } from "./ContextMenu";
 
 export function TrackingDashboard(props) {
-    const [idx, setIdx] = useState(1);
+    const [idx, setIdx] = useState(0);
     var apiList = ["day", "7days", "30days", "year", "all-time"];
 
 
@@ -49,18 +49,26 @@ export function TrackingData(props) {
             if (action === "nothing") continue;
 
             var perc = data.hours[action] / totalHours;
-            
-
             console.log(prevRot)
+
+            function showContext (evt) {
+                console.log("eeeeeeeee")
+                var hours = Math.floor(data.hours[action]);
+                var mins = Math.floor( (data.hours[action] - hours)*60 );
+                ctxMenu.openMenu(evt.pageX, evt.pageY, 
+                    <p style={{width: "100%", margin: 0}}>
+                        {hours}
+                        <span style={{color: "#73b7ff"}}> h </span> {mins}
+                        <span style={{color: "#e2e831"}}> m </span> 
+                        <span style={{color: "#a3a3a3"}}>spent</span> <span style={{borderBottom:"5px solid "+acts[action].color}}>{acts[action].verb}</span></p>)
+            }
 
             circleArray.push(
                 <CircleSlice
                     rotation={prevRot}
                     portion={perc}
                     color={acts[action].color}
-                    onClick={(evt) => {
-                        ctxMenu.openMenu(evt.pageX, evt.pageY, <>{data.hours[action].toFixed(2)} h spent {acts[action].verb}</>)
-                    }}
+                    onClick={showContext}
                     actualRadius = {80}
                 ></CircleSlice>
             );
@@ -70,7 +78,10 @@ export function TrackingData(props) {
     }
 
     return (
-        <div className={s.trackingData}>
+        <div 
+            className={s.trackingData}
+            onMouseLeave={() => ctxMenu.removeMenu()}
+        >
             {circleArray}
         </div>
     );
@@ -99,6 +110,8 @@ export function CircleSlice(props) {
                 cx="60"
                 cy="60"
                 onClick={props.onClick}
+                onMouseEnter={props.onClick}
+                onMouseMove={props.onClick}
             />
         </svg></div>
     );
