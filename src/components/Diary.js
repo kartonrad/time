@@ -221,10 +221,11 @@ export function Diary(props) {
                     <h1>
                         {entr.title||(selInFuture?"Uncertain":selInPresent?"TODAY":"Lost to Time")}
                     </h1>
-                    <p>{entr.text||(selInFuture?"What will happen?":selInPresent?"What's happening?\nRemember your diary!":"Memories fade away\ninto the dark.")}</p>
+                    <div className={s.modalBody}>
+                        <p>{entr.text||(selInFuture?"What will happen?":selInPresent?"What's happening?\nRemember your diary!":"Memories fade away\ninto the dark.")}</p>
 
-                    <TrackingData endpoint = {"day?date="+entryDate}></TrackingData>
-
+                        <TrackingData endpoint = {"day" + (!selInFuture&&selInPresent?"/":("?date="+Math.min(entryDate, new Date().setHours(3, 0, 0, 0) ))) }></TrackingData>
+                    </div>
                     {/*  NAV */}
                     <div className={s.modalNav}>
                         <span onClick={()=>shiftSel(-1)}>&lt;</span> 
