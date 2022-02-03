@@ -254,8 +254,8 @@ export function TrackingActivities(props) {
             <div className={s.current} style={{borderColor: color }}>
                 <div>
                     <span>Currently<br/></span>
-                    {curAct.verb || "vibing"}<br/>
-                    <span>{currentHours.toFixed(1)}h<br/></span>
+                    {curAct.verb || "disconnected"}<br/>
+                    <span><SinceText date={cur?cur.t:Date.now()}></SinceText><br/></span>
                 </div>
             </div>
             <span>Activities:</span>
@@ -277,6 +277,23 @@ export function TrackingActivities(props) {
             </Modal>
         </div>
     );
+}
+
+function SinceText(props) {
+    useRefresh();
+
+    var date = Date.now() - props.date;
+    
+    var h = date/3600000; // Math.floor(date/360000)
+    var m = (h-Math.floor(h))*60;
+    var s = Math.floor((m-Math.floor(m))*60);
+    //console.log(h, m, s);
+
+    const f = (bb) => {
+        return Math.floor(bb).toLocaleString(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: 0})
+    }
+
+    return <>{Math.floor(h)}:{f(m)}:{f(s)}</>
 }
 
 function constructActivityDrawers(acts, clicker, editer, parent) {
