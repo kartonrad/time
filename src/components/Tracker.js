@@ -34,48 +34,52 @@ function mod(n, m) {
   }
 
 export function TrackingData(props) {
-    const [data, setData] = useServerState(`/timestats/${props.endpoint}/`);
+    const [data, setData] = useServerState(`/timestats/${props.endpoint}`);
     const [acts, setActs] = useServerState(`/timestats/activity`)
-
-    var circleArray = []
+    const [circleArray, setCircles] = useState([]);
+    
     
     const ctxMenu = useContext(MenuData);
 
-    if(data&&acts) {
-        var totalHours = data.totalHours - (data.hours.nothing||0);
-        var prevRot = 0;
+    useEffect(() => {
+        if(data&&acts) {
+            var totalHours = data.totalHours - (data.hours.nothing||0);
+            var prevRot = 0;
+            var circleArr = [];
 
-        for (const action in data.hours) {
-            if (action === "nothing") continue;
+            for (const action in data.hours) {
+                if (action === "nothing") continue;
 
-            var perc = data.hours[action] / totalHours;
-            console.log(prevRot)
+                var perc = data.hours[action] / totalHours;
+                console.log(prevRot)
 
-            function showContext (evt) {
-                console.log("eeeeeeeee")
-                var hours = Math.floor(data.hours[action]);
-                var mins = Math.floor( (data.hours[action] - hours)*60 );
-                ctxMenu.openMenu(evt.pageX, evt.pageY, 
-                    <p style={{width: "100%", margin: 0}}>
-                        {hours}
-                        <span style={{color: "#73b7ff"}}> h </span> {mins}
-                        <span style={{color: "#e2e831"}}> m </span> 
-                        <span style={{color: "#a3a3a3"}}>spent</span> <span style={{borderBottom:"5px solid "+acts[action].color}}>{acts[action].verb}</span></p>)
+                function showContext (evt) {
+                    console.log("eeeeeeeee")
+                    var hours = Math.floor(data.hours[action]);
+                    var mins = Math.floor( (data.hours[action] - hours)*60 );
+                    ctxMenu.openMenu(evt.pageX, evt.pageY, 
+                        <p style={{width: "100%", margin: 0}}>
+                            {hours}
+                            <span style={{color: "#73b7ff"}}> h </span> {mins}
+                            <span style={{color: "#e2e831"}}> m </span> 
+                            <span style={{color: "#a3a3a3"}}>spent</span> <span style={{borderBottom:"5px solid "+acts[action].color}}>{acts[action].verb}</span></p>)
+                }
+
+                circleArr.push(
+                    <CircleSlice
+                        rotation={prevRot}
+                        portion={perc}
+                        color={acts[action].color}
+                        onClick={showContext}
+                        actualRadius = {80}
+                    ></CircleSlice>
+                );
+
+                prevRot += perc*360;
             }
-
-            circleArray.push(
-                <CircleSlice
-                    rotation={prevRot}
-                    portion={perc}
-                    color={acts[action].color}
-                    onClick={showContext}
-                    actualRadius = {80}
-                ></CircleSlice>
-            );
-
-            prevRot += perc*360;
+            setCircles(circleArr);
         }
-    }
+    }, [data,acts])
 
     return (
         <div 

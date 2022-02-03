@@ -2,6 +2,7 @@ import s from "../style/Diary.module.sass";
 import {apiUrl } from "../helpers/constants";
 import { useEffect, useRef, useState } from "react";
 import {Modal} from "./Modal";
+import { TrackingData } from "./Tracker";
 
 export function DiaryForm() {
     const pixels = usePixels();
@@ -156,6 +157,9 @@ export function Diary(props) {
     }
 
     var entr = selEntry(pixelGrid, ...sel);
+    var entryDate = new Date(`${sel[0]} ${sel[1]} ${reqYear} 23:59:59`).getTime() + 3*60*60*1000;
+    console.log(entryDate)
+    console.log(entr)
     var selectedPixel = pixels[entr.pixel]||{};
 
     function shiftSel(by) {
@@ -210,7 +214,7 @@ export function Diary(props) {
             </table>
             <Modal ref={modalRef}>
                 <div className={s.modal}>
-                    <div>
+                    <div className={s.modalHeader}>
                         <span style={{color: selectedPixel.color||(!selInPresent?"white":"black")}} >{selectedPixel.desc||"#"}</span> 
                         <span style={{color: selectedPixel.color||(!selInPresent?"white":"black")}} >{sel[1]}.{sel[0]}.{year}</span> 
                     </div>
@@ -218,6 +222,9 @@ export function Diary(props) {
                         {entr.title||(selInFuture?"Uncertain":selInPresent?"TODAY":"Lost to Time")}
                     </h1>
                     <p>{entr.text||(selInFuture?"What will happen?":selInPresent?"What's happening?\nRemember your diary!":"Memories fade away\ninto the dark.")}</p>
+
+                    <TrackingData endpoint = {"day?date="+entryDate}></TrackingData>
+
                     {/*  NAV */}
                     <div className={s.modalNav}>
                         <span onClick={()=>shiftSel(-1)}>&lt;</span> 
