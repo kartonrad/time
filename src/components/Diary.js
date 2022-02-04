@@ -2,7 +2,7 @@ import s from "../style/Diary.module.sass";
 import {apiUrl } from "../helpers/constants";
 import { useEffect, useRef, useState } from "react";
 import {Modal} from "./Modal";
-import { TrackingData } from "./Tracker";
+import { ActivityTimeline, TrackingData } from "./Tracker";
 
 export function DiaryForm() {
     const pixels = usePixels();
@@ -194,6 +194,8 @@ export function Diary(props) {
     var selInFuture = (month < sel[0] || (month===sel[0] && date.getDate() < sel[1]));
     var selInPresent = !selInFuture && (month == sel[0] && date.getDate() == sel[1]);
 
+    var datePayload = (!selInFuture&&selInPresent?"/":("?date="+Math.min(entryDate, new Date().setHours(3, 0, 0, 0) )));
+
     return (
         <div className={s.diaryGrid} onKeyDown={keyDown} tabindex="0" >
             <h1>Year in Pixels <span>- {reqYear}</span></h1>
@@ -224,7 +226,8 @@ export function Diary(props) {
                     <div className={s.modalBody}>
                         <p>{entr.text||(selInFuture?"What will happen?":selInPresent?"What's happening?\nRemember your diary!":"Memories fade away\ninto the dark.")}</p>
 
-                        <TrackingData endpoint = {"day" + (!selInFuture&&selInPresent?"/":("?date="+Math.min(entryDate, new Date().setHours(3, 0, 0, 0) ))) }></TrackingData>
+                        <TrackingData endpoint = {"day" +  datePayload}></TrackingData>
+                        <ActivityTimeline endpoint= {datePayload}></ActivityTimeline>
                     </div>
                     {/*  NAV */}
                     <div className={s.modalNav}>

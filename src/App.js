@@ -1,7 +1,7 @@
 import s from './style/App.module.sass';
 import Header from "./components/Header.js";
 import { TimeProgressCards, ProgressBar} from "./components/Progress";
-import { CircleSlice, TrackingActivities, TrackingDashboard} from "./components/Tracker";
+import { ActivityTimeline, CircleSlice, TrackingActivities, TrackingDashboard} from "./components/Tracker";
 
 import {
   Switch,
@@ -27,6 +27,7 @@ function App() {
               <Diary/>
               <TrackingActivities/>
               <TrackingDashboard/>
+              <ActivityTimeline/>
           </Route>
         </Switch>
       </div>

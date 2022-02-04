@@ -53,17 +53,7 @@ export function TrackingData(props) {
                 var perc = data.hours[action] / totalHours;
                 console.log(prevRot)
 
-                function showContext (evt) {
-                    console.log("eeeeeeeee")
-                    var hours = Math.floor(data.hours[action]);
-                    var mins = Math.floor( (data.hours[action] - hours)*60 );
-                    ctxMenu.openMenu(evt.pageX, evt.pageY, 
-                        <p style={{width: "100%", margin: 0}}>
-                            {hours}
-                            <span style={{color: "#73b7ff"}}> h </span> {mins}
-                            <span style={{color: "#e2e831"}}> m </span> 
-                            <span style={{color: "#a3a3a3"}}>spent</span> <span style={{borderBottom:"5px solid "+acts[action].color}}>{acts[action].verb}</span></p>)
-                }
+                const showContext = contextMenuFunction( ctxMenu, data.hours[action], acts[action])
 
                 circleArr.push(
                     <CircleSlice
@@ -121,6 +111,89 @@ export function CircleSlice(props) {
     );
 }
 
+function contextMenuFunction(ctxMenu, length, activity){
+return (evt) => {
+    console.log("eeeeeeeee")
+    var clearLength = length;
+    var hours = Math.floor( clearLength );
+    var mins = Math.floor( (clearLength - hours)*60 );
+    ctxMenu.openMenu(evt.pageX, evt.pageY, 
+        <p style={{width: "100%", margin: 0}}>
+            {hours}
+            <span style={{color: "#73b7ff"}}> h </span> {mins}
+            <span style={{color: "#e2e831"}}> m </span> 
+            <span style={{color: "#a3a3a3"}}>spent</span> <span style={{borderBottom:"5px solid "+activity.color}}>{activity.verb}</span></p>)
+}}
+
+export function ActivityTimeline(props) {
+    const [data, setData] = useServerState(`/timestats/timeline${props.endpoint||"/"}`);
+    const [acts, setActs] = useServerState(`/timestats/activity`);
+    const [bObjs, setBlocks] = useState([]);
+
+    var blockObjects = [];
+    const ctxMenu = useContext(MenuData);
+
+    useEffect(() => {
+        if(data && acts) {
+            var as = data.actions;
+            var startTime = data.processedFrom;
+            var endTime = data.processedUntil;
+            
+
+            // skip nothing at beginning and end
+            if( as.length > 0) {
+                if( as[as.length-1].act === "nothing" ) { endTime = as[as.length-1].t; }
+                if( as[0].act === "nothing" && as[1] ) { startTime = as[1].t; }
+            }
+            var displayDuration = endTime-startTime;
+
+            // HOUR STICKS
+            var hours = Math.ceil(displayDuration/3600000);
+            var startHour = new Date(startTime).getHours();
+            var startHourTs = new Date(startTime).setHours(startHour, 0, 0, 0);
+            console.log("sh", startHourTs);
+
+            for (let h = 0; h<=hours; h++) {
+                var thish = startHourTs+(h*3600000);
+                var blockStart = (thish-startTime)/displayDuration*100;
+
+                blockObjects.push(
+                    <div className={s.hourStick} style={{left: blockStart+"%"}}>
+                        <span>{(startHour+h)%24}</span>
+                    </div>
+                )
+            }
+
+            // ACTIVITY BLOCKS
+            for (let i = 0; i<as.length; i++) {
+                if(as[i].act !== "nothing") {
+                    var blockStart = ( as[i].t-startTime )/displayDuration*100;
+                    var blockEnd = ( (!!as[i+1]?as[i+1].t:endTime)-startTime )/displayDuration*100;
+                    var len = blockEnd-blockStart;
+
+                    const showContext = contextMenuFunction(ctxMenu, len*displayDuration/100/3600000, acts[as[i].act])
+
+                    blockObjects.push(
+                        <div 
+                            className={s.blockObject} 
+                            style={{backgroundColor: acts[as[i].act].color, width: len+"%", left: blockStart+"%"}}
+                            onClick={showContext}
+                            onMouseEnter={showContext}
+                            onMouseMove={showContext}
+                        ></div>
+                    )
+                }
+            }
+            setBlocks(blockObjects);
+        }
+    }, [data, acts])
+
+    return (
+        <div className={s.actTimeline} onMouseLeave={() => ctxMenu.removeMenu()}>
+            {bObjs}
+        </div>
+    )
+}
 
 export function EditActivity(props) {
     const [color, setColor] = useState({hex: props.act.color}); 
