@@ -1,5 +1,5 @@
 # Time
-See it live: https://kartonrad.de
+See it live: https://time.kartonrad.de
 
 ### Pretty sick Dashboard
 ![image](https://user-images.githubusercontent.com/56208328/189648001-0ed5e326-82c2-4aa3-acb0-73c7eb425e59.png)
