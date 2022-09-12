@@ -5,7 +5,7 @@ See it live: https://time.kartonrad.de
 ![image](https://user-images.githubusercontent.com/56208328/189648001-0ed5e326-82c2-4aa3-acb0-73c7eb425e59.png)
 
 ### Diary entries, with historical Activity Timeline
-![image](https://user-images.githubusercontent.com/56208328/189647257-c0bb447c-d69d-4fe3-9f17-9902d9f4510a.png)
+![189647257-c0bb447c-d69d-4fe3-9f17-9902d9f4510a](https://user-images.githubusercontent.com/56208328/189656427-c68ab7aa-0415-411e-94ee-3b1a0b773c95.jpg)
 
 ### Rate your Day and see your years summary in Pixels
 ![image](https://user-images.githubusercontent.com/56208328/189648586-2d9ce2f7-e275-4a4b-b453-08b80cb09b68.png)
